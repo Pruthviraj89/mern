@@ -1,35 +1,39 @@
+// -dotenv is used to secure the password , database url which is in file config.env
+const dotenv = require('dotenv');
+dotenv.config({path:'./config.env'});
 const mongoose= require('mongoose');
 const express= require('express');
 const cors = require("cors");
-const app= express();
 
+const app= express();
+app.use(cors());
 app.use(express.json());
 
+require('./db/conn');
 
-const DB='mongodb://localhost:27017';
+const PORT=process.env.PORT;
 
-mongoose.connect(DB,{dbName:'registerdb'}).then(()=>{
-    console.log(`connection successful`);
-}).catch((err)=>{console.log(`no connection `,err)});
+
+
+
+
+
+
+
+
 
 
 // Schema for users of app
 const UserSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        
-    },
-    email: {
-        type: String,
-        
-    }
+    name: String,
+    email:  String,
     
 });
 const User = mongoose.model('data',UserSchema);
 User.createIndexes();
 
 
-app.use(cors());
+
 
 
 app.get('/',(req,res)=>{
@@ -47,7 +51,7 @@ app.post("/register", async (req, resp) => {
         result = result.toObject();
         if (result) {
             delete result.password;
-            resp.send(req.body);
+            resp.send('zlalasfa');
             console.log(result);
         } else {
             console.log("User already register");
@@ -59,6 +63,8 @@ app.post("/register", async (req, resp) => {
     }
 });
 
-app.listen(8400,()=>{
-    console.log('server is runnning at 8400');
+
+
+app.listen(PORT,()=>{
+    console.log(`server is runnning at ${PORT}`);
 })
